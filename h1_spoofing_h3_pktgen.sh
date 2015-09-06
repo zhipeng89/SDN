@@ -1,4 +1,5 @@
 #! /bin/bash
+    "fanout - number of child switch per parent switch"
 
 #modprobe pktgen
 
@@ -28,34 +29,34 @@ function pg() {
 PGDEV=/proc/net/pktgen/kpktgend_0
   echo "Removing all devices"
  pgset "rem_device_all" 
-  echo "Adding eth1"
- pgset "add_device eth1" 
-  echo "Setting max_before_softirq 10000"
- pgset "max_before_softirq 10000"
+  echo "Adding h1-eth0"
+ pgset "add_device h1-eth0" 
+  echo "Setting max_before_softirq 1"
+ pgset "max_before_softirq 1"
 
 
 # device config
 # ipg is inter packet gap. 0 means maximum speed.
 
-CLONE_SKB="clone_skb 1000000"
+CLONE_SKB="clone_skb 0"
 # NIC adds 4 bytes CRC
-PKT_SIZE="pkt_size 1200"
+PKT_SIZE="pkt_size 10"
 
 # COUNT 0 means forever
 #COUNT="count 0"
-COUNT="count 0"
+COUNT="count 10"
 IPG="ipg 0"
 
-PGDEV=/proc/net/pktgen/eth1
+PGDEV=/proc/net/pktgen/h1-eth0
   echo "Configuring $PGDEV"
  pgset "$COUNT"
  pgset "$CLONE_SKB"
  pgset "$PKT_SIZE"
 #pgset "$IPG"
- pgset "src_mac 00:0A:EB:6A:6F:0D"
- pgset "src_min 192.168.13.1"
- pgset "dst 192.168.13.3"
- pgset "dst_mac 00:24:E8:3C:3B:80"
+ pgset "src_mac 00:00:00:00:00:03"  # ip spoofing
+ pgset "src_min 10.0.0.3"
+ pgset "dst 10.0.0.2"
+ pgset "dst_mac 00:00:00:00:00:02"
 # pgset "udp_src_min 8000"
 # pgset "udp_src_max 8000"
 # pgset "udp_dst_min 8000"
